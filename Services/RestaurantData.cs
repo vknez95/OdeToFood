@@ -1,17 +1,47 @@
-using System;
 using System.Collections.Generic;
-using OdeToFood.Models;
+using System.Linq;
+using OdeToFood.Entities;
 
 namespace OdeToFood.Services
 {
     public interface IRestaurantData
     {
         IEnumerable<Restaurant> GetAll();
+        Restaurant Get(int id);
+        Restaurant Add(Restaurant newRestaurant);
+    }
+
+    public class MySqlRestaurantData : IRestaurantData
+    {
+        private OdeToFoodDbContext _context;
+
+        public MySqlRestaurantData(OdeToFoodDbContext context)
+        {
+            _context = context;
+        }
+
+        public Restaurant Add(Restaurant newRestaurant)
+        {
+            _context.Add(newRestaurant);
+            _context.SaveChanges();
+
+            return newRestaurant;
+        }
+
+        public Restaurant Get(int id)
+        {
+            return _context.Restaurants.FirstOrDefault(r => r.Id == id);
+        }
+
+        public IEnumerable<Restaurant> GetAll()
+        {
+            return _context.Restaurants;
+        }
     }
 
     public class InMemoryRestaurantData : IRestaurantData
     {
-        public InMemoryRestaurantData()
+        static InMemoryRestaurantData()
         {
             _restaurants = new List<Restaurant>
             {
@@ -21,11 +51,23 @@ namespace OdeToFood.Services
             };
         }
 
+        public Restaurant Add(Restaurant newRestaurant)
+        {
+            newRestaurant.Id = _restaurants.Max(r => r.Id) + 1;
+            _restaurants.Add(newRestaurant);
+
+            return newRestaurant;
+        }
+        public Restaurant Get(int id)
+        {
+            return _restaurants.FirstOrDefault(r => r.Id == id);
+        }
+
         public IEnumerable<Restaurant> GetAll()
         {
             return _restaurants;
         }
 
-        private List<Restaurant> _restaurants;
+        static private List<Restaurant> _restaurants;
     }
 }

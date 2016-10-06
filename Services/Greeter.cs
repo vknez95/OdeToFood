@@ -1,11 +1,10 @@
-using System;
 using Microsoft.Extensions.Configuration;
 
 namespace OdeToFood.Services
 {
     public interface IGreeter
     {
-        string GetGreeter();
+        string GetGreeting();
     }
 
     public class Greeter : IGreeter
@@ -14,10 +13,10 @@ namespace OdeToFood.Services
 
         public Greeter(IConfiguration configuration)
         {
-            _greeting = configuration["greeting"];
+            _greeting = configuration["Greeting"];
         }
 
-        public string GetGreeter()
+        public string GetGreeting()
         {
             return _greeting;
         }

@@ -1,14 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using MySQL.Data.EntityFrameworkCore.Extensions;
+using OdeToFood.Entities;
 using OdeToFood.Services;
 
 namespace OdeToFood
@@ -19,7 +16,9 @@ namespace OdeToFood
         {
             var builder = new ConfigurationBuilder()
                             .SetBasePath(env.ContentRootPath)
-                            .AddJsonFile("appsettings.json");
+                            .AddJsonFile("appsettings.json")
+                            .AddEnvironmentVariables();
+
             Configuration = builder.Build();
         }
 
@@ -32,7 +31,9 @@ namespace OdeToFood
             services.AddMvc();
             services.AddSingleton((provider) => Configuration);
             services.AddSingleton<IGreeter, Greeter>();
-            services.AddScoped<IRestaurantData, InMemoryRestaurantData>();
+            services.AddScoped<IRestaurantData, MySqlRestaurantData>();
+            services.AddDbContext<OdeToFoodDbContext>(options =>
+                options.UseMySQL(Configuration.GetConnectionString("OdeToFoodMySql")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,7 +61,7 @@ namespace OdeToFood
             {
                 //throw new System.Exception("Error!");
 
-                var greeting = greeter.GetGreeter();
+                var greeting = greeter.GetGreeting();
                 await context.Response.WriteAsync(greeting);
             });
         }

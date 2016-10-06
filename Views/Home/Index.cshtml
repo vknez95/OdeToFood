@@ -1,4 +1,4 @@
-@model List<OdeToFood.Models.Restaurant>
+@model OdeToFood.ViewModels.HomePageViewModel
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -6,11 +6,14 @@
 </head>
 <body>
     <h1>Welcome!</h1>
+    <h3>@Model.CurrentGreeting</h3>
     <table>
-        @foreach(var restaurant in Model)
+        @foreach(var restaurant in Model.Restaurants)
         {
             <tr>
-                <td>@restaurant.Id</td>
+                <td>
+                    @Html.ActionLink(restaurant.Id.ToString(), "Details", new { id = restaurant.Id })
+                </td>
                 <td>@restaurant.Name</td>
             </tr>
         }
