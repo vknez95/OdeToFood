@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,6 +35,8 @@ namespace OdeToFood
             services.AddScoped<IRestaurantData, MySqlRestaurantData>();
             services.AddDbContext<OdeToFoodDbContext>(options =>
                 options.UseMySQL(Configuration.GetConnectionString("OdeToFoodMySql")));
+            services.AddIdentity<User, IdentityRole>()
+                .AddEntityFrameworkStores<OdeToFoodDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +49,13 @@ namespace OdeToFood
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseExceptionHandler(new ExceptionHandlerOptions
+                {
+                    ExceptionHandler = context => context.Response.WriteAsync("Opps!")
+                });
+            }
 
             //app.UseWelcomePage();
             //app.UseRuntimeInfoPage();     // obsolete
@@ -53,6 +63,8 @@ namespace OdeToFood
             // app.UseDefaultFiles();
             // app.UseStaticFiles();
             app.UseFileServer();
+
+            app.UseIdentity();
 
             //app.UseMvcWithDefaultRoute();
             app.UseMvc(ConfigureRoutes);

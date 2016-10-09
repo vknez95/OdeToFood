@@ -6,6 +6,7 @@ namespace OdeToFood.Controllers
     public class AboutController
     {
         // [Route("")]
+        // [Route("company/[controller]/[action]")]
         public string Phone()
         {
             return "+1-555-555-5555";
