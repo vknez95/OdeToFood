@@ -18,6 +18,7 @@ namespace OdeToFood.Controllers
             _restaurantData = restaurantData;
         }
 
+        [HttpGet]
         [AllowAnonymous]
         public ViewResult Index()
         {
@@ -32,6 +33,7 @@ namespace OdeToFood.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Details(int id)
         {
             var model = _restaurantData.Get(id);

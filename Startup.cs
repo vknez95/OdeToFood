@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MySQL.Data.EntityFrameworkCore.Extensions;
 using OdeToFood.Entities;
 using OdeToFood.Services;
 
@@ -34,7 +34,7 @@ namespace OdeToFood
             services.AddSingleton<IGreeter, Greeter>();
             services.AddScoped<IRestaurantData, MySqlRestaurantData>();
             services.AddDbContext<OdeToFoodDbContext>(options =>
-                options.UseMySQL(Configuration.GetConnectionString("OdeToFoodMySql")));
+                options.UseMySql(Configuration.GetConnectionString("OdeToFoodMySql")));
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<OdeToFoodDbContext>();
         }
@@ -73,8 +73,10 @@ namespace OdeToFood
             {
                 //throw new System.Exception("Error!");
 
-                var greeting = greeter.GetGreeting();
-                await context.Response.WriteAsync(greeting);
+                // var greeting = greeter.GetGreeting();
+                // await context.Response.WriteAsync(greeting);
+
+                await context.Response.WriteAsync("Not found");
             });
         }
 
