@@ -53,7 +53,7 @@ namespace OdeToFood
             {
                 app.UseExceptionHandler(new ExceptionHandlerOptions
                 {
-                    ExceptionHandler = context => context.Response.WriteAsync("Opps!")
+                    ExceptionHandler = context => context.Response.WriteAsync("Oops!")
                 });
             }
 
